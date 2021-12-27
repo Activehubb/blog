@@ -1,0 +1,15 @@
+.postImg {
+	width: 100%;
+	height: 50vh;
+}
+
+@media (min-width: 1024px) {
+	.lg {
+		flex: 3;
+	}
+
+	.postImg {
+		width: 100%;
+		height: 20vh;
+	}
+}
