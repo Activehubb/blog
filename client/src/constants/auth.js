@@ -7,6 +7,7 @@ import {
 	AUTH_ERROR,
 	LOAD_USER,
 	LOGOUT,
+	DEL_USER,
 } from './types';
 import { setAlert } from './alert';
 import setAuth from '../utils/setAuth';
@@ -60,7 +61,7 @@ export const register =
 
 			dispatch(loadUser());
 		} catch (err) {
-			// const error = err.response.data
+			dispatch(setAlert(`Server error check your connection`, 'red'));
 			dispatch(
 				{ type: REGISTER_FAIL },
 				setAlert(`Server error check your connection`, 'red')
@@ -90,13 +91,28 @@ export const login = (email, password) => async (dispatch) => {
 
 		dispatch(loadUser());
 	} catch (err) {
-		// const error = err.response.data
-		dispatch(setAlert(`Server error check your connection`, 'red'), {
+		dispatch(setAlert(`Server error check your connection`, 'red'));
+		dispatch({
 			type: LOGIN_FAIL,
 		});
+		console.log(err);
 	}
 };
 
 export const logout = () => (dispatch) => {
+	dispatch(setAlert('You are currently logout', 'green'));
 	dispatch({ type: LOGOUT });
+};
+
+export const DelUser = () => async (dispatch) => {
+	try {
+		await axios.delete('/user');
+
+		dispatch(setAlert('Account Deleted successfully', 'green'));
+		dispatch({ type: LOGOUT });
+	} catch (err) {
+		dispatch({
+			type: AUTH_ERROR,
+		});
+	}
 };

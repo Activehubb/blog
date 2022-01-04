@@ -1,14 +1,15 @@
-import {  ViewBoardsIcon } from '@heroicons/react/solid';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import Agency from '../../../../activehub.png';
+import { DeleteOutlined, Logout } from '@mui/icons-material';
+import { ViewBoardsIcon } from '@heroicons/react/solid';
 import {
 	BookOpenIcon,
 	UserIcon,
 	ChevronDownIcon,
+	TrashIcon,
 } from '@heroicons/react/outline';
-import React, { useState } from 'react';
-// import DP from '../../../../bgjuly.jfif';
 import './nav.css';
-import { Link } from 'react-router-dom';
-import Agency from '../../../../activehub.png'
 
 const Nav = () => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -25,6 +26,7 @@ const Nav = () => {
 								<Link to='/admin'>Dashboard</Link>
 							</span>
 						</div>
+
 						<div className='left'>
 							<div
 								className='box flex items-center space-x-4 border-sm border-solid rounded-full shadow p-2 text-gray-600  relative'
@@ -50,24 +52,38 @@ const Nav = () => {
 												</li>
 											</ul>
 										</div>
-										<ul className='list'>
+										<ul className='list p-4'>
 											<li className='list-item  border-b border-dotted border-gray-200 p-2'>
-												Post
+												<Link to='/admin'>Create Post</Link>
 											</li>
 											<li className='list-item  border-b border-dotted border-gray-200 p-2'>
-												Create Post
+												<Link to='/'>Posts</Link>
 											</li>
 											<li className='list-item  border-b border-dotted border-gray-200 p-2'>
-												Page Desc
+												<Link to='/user'>Create Profile</Link>
 											</li>
 											<li className='list-item  border-b border-dotted border-gray-200 p-2'>
-												Exhibition
+												<Link to='/gallery'>Gallery</Link>
 											</li>
 											<li className='list-item  border-b border-dotted border-gray-200 p-2'>
-												Gallery
+												<Link to='/comments'>Comments</Link>
 											</li>
 											<li className='list-item  border-b border-dotted border-gray-200 p-2'>
-												Comments
+												<Link
+													to='/logout'
+													className='flex items-center justify-center'
+												>
+													<Logout /> <span>Logout</span>
+												</Link>
+											</li>
+											<li className='list-item bg-red-500 shadow-md rounded-md p-2'>
+												<Link
+													to='/delaccount'
+													className='flex items-center justify-center border-none text-white'
+												>
+													<DeleteOutlined />
+													Delete Account
+												</Link>
 											</li>
 										</ul>
 									</div>

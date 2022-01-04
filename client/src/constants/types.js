@@ -7,6 +7,7 @@ export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const LOGOUT = 'LOGOUT';
 export const AUTH_ERROR = 'AUTH_ERROR';
 export const LOAD_USER = 'LOAD_USER';
+export const DEL_USER = 'DEL_USER';
 export const CREATE_POST = 'CREATE_POST';
 export const UPDATE_POST = 'UPDATE_POST';
 export const DEL_POST = 'DEL_POST';

@@ -9,6 +9,8 @@ import Register from './components/admin/auth/register/Register';
 import Login from './components/admin/auth/login/Login';
 import PrivateRoute from './routes/PrivateRoute';
 import Gallery from './components/admin/pages/Gallery';
+import Logout from './components/admin/pages/Logout'
+import DelUser from './components/admin/pages/DelUser'
 
 import { Provider } from 'react-redux';
 import store from './store';
@@ -43,9 +45,11 @@ function App() {
 						<PrivateRoute exact path='/admin' component={CreatePost} />
 						<PrivateRoute exact path='/user' component={UserSetting} />
 						<PrivateRoute exact path='/updpost/:postId' component={UpdatePost} />
-						<Route exact path='/updateprofile/:postId' component={UpdateProfile} />
-						<Route exact path='/deletepost/:postId' component={DeletePost} />
-						<Route exact path='/deleteprofile/:postId' component={DeleteProfile} />
+						<PrivateRoute exact path='/updateprofile/:postId' component={UpdateProfile} />
+						<PrivateRoute exact path='/deletepost/:postId' component={DeletePost} />
+						<PrivateRoute exact path='/deleteprofile/:postId' component={DeleteProfile} />
+						<PrivateRoute exact path='/delaccount' component={DelUser} />
+						<PrivateRoute exact path='/logout' component={Logout} />
 
 						{/* Admin */}
 					</Switch>

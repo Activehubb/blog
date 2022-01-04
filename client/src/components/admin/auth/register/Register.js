@@ -6,7 +6,7 @@ import { register } from '../../../../constants/auth';
 import Alert from '../../layout/Alert';
 import { Redirect } from 'react-router-dom';
 
-const Register = ({ setAlert, register, authenticate }) => {
+const Register = ({ setAlert, register, auth: { isAuthenticated } }) => {
 	const [formData, setFormData] = useState({
 		username: '',
 		email: '',
@@ -33,8 +33,8 @@ const Register = ({ setAlert, register, authenticate }) => {
 		}
 	};
 
-	if (authenticate) {
-		return <Redirect to='/login-admin' />
+	if (isAuthenticated) {
+		return <Redirect to='/user' />
 	}
 
 	return (
@@ -133,11 +133,11 @@ const Register = ({ setAlert, register, authenticate }) => {
 Register.propTypes = {
 	setAlert: PropTypes.func.isRequired,
 	register: PropTypes.func.isRequired,
-	authenticate: PropTypes.bool,
+	auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-	authenticate: state.auth.isAuthenticated
+	auth: state.auth
 })
 
 export default connect(mapStateToProps, { setAlert, register })(Register);

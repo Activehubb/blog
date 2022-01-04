@@ -8,8 +8,9 @@ import Alert from '../../layout/Alert';
 import storage from '../../../../firebase';
 import { getDownloadURL, ref, uploadBytesResumable } from '@firebase/storage';
 import { setAlert } from '../../../../constants/alert';
+import { Redirect } from 'react-router-dom';
 
-const CreateProfile = ({ createProfile }) => {
+const CreateProfile = ({ createProfile, prof:{profile} }) => {
 	const [data, setData] = useState(null);
 
 	const [media, setMedia] = useState(null);
@@ -60,6 +61,10 @@ const CreateProfile = ({ createProfile }) => {
 	};
 
 	console.log(data);
+	
+	if (profile) {
+		return <Redirect to='/admin' />
+	}
 
 	return (
 		<Fragment>
@@ -272,4 +277,8 @@ CreateProfile.propTypes = {
 	createProfile: PropTypes.func.isRequired,
 };
 
-export default connect(null, { createProfile })(CreateProfile);
+const mapStateToProps = (state) => ({
+	prof: state.profile
+})
+
+export default connect(mapStateToProps, { createProfile })(CreateProfile);

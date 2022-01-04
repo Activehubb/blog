@@ -5,8 +5,15 @@ import Navbar from './Navbar';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getProfile } from '../../../constants/profile';
+import { Logout } from '@mui/icons-material';
+import { logout } from '../../../constants/auth';
 
-const Home = ({ getProfile, profile: { profiles } }) => {
+const Home = ({
+	getProfile,
+	profile: { profiles },
+	auth: { isAuthenticated },
+	logout,
+}) => {
 	useEffect(() => {
 		getProfile();
 	}, [getProfile]);
@@ -29,7 +36,7 @@ const Home = ({ getProfile, profile: { profiles } }) => {
 							</p>
 						</div>
 						<div className='left flex justify-between items-center'>
-							<ul className='hidden md:flex md:flex-grow md: space-x-2 font-semibold font-vare text-gray-400 px-4'>
+							<ul className='hidden lg:flex lg:justify-center lg:items-center space-x-2 font-semibold font-vare text-gray-400 px-4'>
 								<li>
 									<Link to='/about' className='px-4'>
 										About
@@ -40,6 +47,16 @@ const Home = ({ getProfile, profile: { profiles } }) => {
 										Gallery
 									</Link>
 								</li>
+								{isAuthenticated && (
+									<li className='list-item bg-red-500 shadow-md rounded-md p-2'>
+										<Link
+											to='/logout'
+											className='flex items-center justify-center border-none text-white'
+										>
+											<Logout /> <span>Logout</span>
+										</Link>
+									</li>
+								)}
 							</ul>
 							<div className='icons flex justify-between items-center'>
 								<MenuIcon
@@ -58,10 +75,12 @@ const Home = ({ getProfile, profile: { profiles } }) => {
 Home.propTypes = {
 	getProfile: PropTypes.func.isRequired,
 	profile: PropTypes.array.isRequired,
+	auth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
 	profile: state.profile,
+	auth: state.auth,
 });
 
-export default connect(mapStateToProps, { getProfile })(Home);
+export default connect(mapStateToProps, { getProfile, logout })(Home);
