@@ -35,8 +35,8 @@ const Nav = () => {
 								<p>Activehub</p>
 								<ChevronDownIcon className='h-5 text-gray-400 cursor-pointer' />
 								{isOpen && (
-									<div className='box absolute top-14 right-0 z-10 bg-gray-50  shadow rounded-md'>
-										<div className='bg-gray-900 p-4 rounded-t-md flex justify-center items-center flex-col'>
+									<div className='box absolute top-14 right-0 z-10 bg-gray-50  shadow rounded-md '>
+										<div className='bg-gray-900 p-4 rounded-t-md flex justify-center items-center flex-col w-3/5'>
 											<img
 												src={Agency}
 												alt=''
@@ -82,7 +82,7 @@ const Nav = () => {
 													className='flex items-center justify-center border-none text-white'
 												>
 													<DeleteOutlined />
-													Delete Account
+													<p className='text-sm'>Delete Account</p>
 												</Link>
 											</li>
 										</ul>

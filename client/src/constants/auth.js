@@ -11,7 +11,7 @@ import {
 } from './types';
 import { setAlert } from './alert';
 import setAuth from '../utils/setAuth';
-// import { axiosInstance } from '../config';
+import { axiosInstance } from '../config';
 import axios from 'axios';
 
 export const loadUser = () => async (dispatch) => {
@@ -20,7 +20,7 @@ export const loadUser = () => async (dispatch) => {
 	}
 
 	try {
-		const res = await axios.get('/auth');
+		const res = await axiosInstance.get('/auth');
 
 		dispatch({
 			type: LOAD_USER,
@@ -49,7 +49,7 @@ export const register =
 		});
 
 		try {
-			const res = await axios.post('/user', body, config);
+			const res = await axiosInstance.post('/user', body, config);
 
 			dispatch(setAlert(`Account created successfully`, 'green'), {
 				type: REGISTER_SUCCESS,
@@ -82,7 +82,7 @@ export const login = (email, password) => async (dispatch) => {
 	});
 
 	try {
-		const res = await axios.post('/auth', body, config);
+		const res = await axiosInstance.post('/auth', body, config);
 
 		dispatch({
 			type: LOGIN_SUCCESS,
@@ -106,10 +106,10 @@ export const logout = () => (dispatch) => {
 
 export const DelUser = () => async (dispatch) => {
 	try {
-		await axios.delete('/user');
+		await axiosInstance.delete('/user');
 
 		dispatch(setAlert('Account Deleted successfully', 'green'));
-		dispatch({ type: LOGOUT });
+		dispatch({ type: DEL_USER });
 	} catch (err) {
 		dispatch({
 			type: AUTH_ERROR,
