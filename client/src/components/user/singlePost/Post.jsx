@@ -45,7 +45,7 @@ const SinglePost = ({
 								<div className='body'>
 									<div className='p-2 text-gray-500'>
 										<span className=''>
-											<button>{`by ${post.username}`}</button>
+											<button>{`by ${post.user.username}`}</button>
 										</span>
 										<span>
 											<button className='px-2 font-lora'>
@@ -53,7 +53,7 @@ const SinglePost = ({
 											</button>
 										</span>
 										<span className='creator'>
-											<button>{post.username}</button>
+											<button>{post.user.username}</button>
 										</span>
 									</div>
 									<div className='font-lora text-gray-600 font-medium p-2'>

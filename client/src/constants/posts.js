@@ -8,12 +8,12 @@ import {
 	UPDATE_POST,
 	DEL_POST,
 } from './types';
-import { axiosInstance } from '../config';
+// import { axiosInstance } from '../config';
 import axios from 'axios';
 
 export const getPost = () => async (dispatch) => {
 	try {
-		const res = await axiosInstance.get('/post');
+		const res = await axios.get('/post');
 
 		dispatch({
 			type: GET_POSTS,
@@ -26,7 +26,7 @@ export const getPost = () => async (dispatch) => {
 
 export const getPostById = (path) => async (dispatch) => {
 	try {
-		const res = await axiosInstance.get(`/post/${path}`);
+		const res = await axios.get(`/post/${path}`);
 
 		dispatch({
 			type: GET_POST,
@@ -47,7 +47,7 @@ export const createPost = (newPost) => async (dispatch) => {
 			},
 		};
 
-		const res = await axiosInstance.post('/post', newPost, config);
+		const res = await axios.post('/post', newPost, config);
 
 		dispatch(setAlert('Post Created successfully', 'green'), {
 			type: CREATE_POST,
@@ -68,7 +68,7 @@ export const updatePost = (path, updpost) => async (dispatch) => {
 				'Content-Type': 'application/json',
 			},
 		};
-		const res = await axiosInstance.put(`/post/${path}`, updpost, config);
+		const res = await axios.put(`/post/${path}`, updpost, config);
 
 		dispatch(setAlert('Post updated successfully', 'blue'), {
 			type: UPDATE_POST,
@@ -86,7 +86,7 @@ export const updatePost = (path, updpost) => async (dispatch) => {
 
 export const delPost = (path) => async (dispatch) => {
 	try {
-		const res = await axiosInstance.delete(`/post/${path}`);
+		const res = await axios.delete(`/post/${path}`);
 
 		dispatch(setAlert('Post Deleted successfully', 'green'), {
 			type: DEL_POST,

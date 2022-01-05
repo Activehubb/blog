@@ -57,7 +57,7 @@ const CreatePost = ({ createPost }) => {
 	console.log(data);
 	return (
 		<Fragment>
-			<div className=' bg-gray-50 text-gray-800 '>
+			<div className=' bg-gray-50 text-gray-800 h-full py-8'>
 				<div className=' flex justify-center items-center h-screen'>
 					<div className='p-4 w-1/2 bg-white shadow rounded'>
 						<Alert />

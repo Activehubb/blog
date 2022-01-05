@@ -7,11 +7,11 @@ import {
 	GET_PROFILE,
 	UPDATE_PROFILE,
 } from './types';
-import { axiosInstance } from '../config';
+// import { axiosInstance } from '../config';
 
 export const createProfile = (newProfile) => async (dispatch) => {
 	try {
-		const res = await axiosInstance.post('/profile', newProfile);
+		const res = await axios.post('/profile', newProfile);
 
 		dispatch(setAlert('Profile created successfully', 'green'), {
 			type: CREATE_PROFILE,
@@ -28,7 +28,7 @@ export const createProfile = (newProfile) => async (dispatch) => {
 
 export const updateProfile = (path, newProfile) => async (dispatch) => {
 	try {
-		const res = await axiosInstance.put(`/profile/${path}`, newProfile);
+		const res = await axios.put(`/profile/${path}`, newProfile);
 
 		dispatch(setAlert('Profile updated successfully', 'green'), {
 			type: UPDATE_PROFILE,
@@ -44,7 +44,7 @@ export const updateProfile = (path, newProfile) => async (dispatch) => {
 };
 export const getProfile = () => async (dispatch) => {
 	try {
-		const res = await axiosInstance.get('/profile');
+		const res = await axios.get('/profile');
 
 		dispatch({
 			type: GET_PROFILE,
@@ -56,7 +56,7 @@ export const getProfile = () => async (dispatch) => {
 };
 export const delProfile = (path) => async (dispatch) => {
 	try {
-		const res = await axiosInstance.delete(`/profile/${path}`);
+		const res = await axios.delete(`/profile/${path}`);
 
 		dispatch(setAlert('Profile Deleted successfully', 'green'));
 		dispatch({

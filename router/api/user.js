@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
-const Profile = require('../models/Profile')
-const Post = require('../models/Post')
+const User = require('../../models/User');
+const Profile = require('../../models/Profile')
+const Post = require('../../models/Post');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const auth = require('../middleware/auth');
+const auth = require('../../middleware/auth');
 dotenv.config();
 
 router.post('/', async (req, res) => {

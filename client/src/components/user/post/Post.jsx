@@ -13,7 +13,7 @@ const Card = ({ post }) => {
 							src={post.media}
 							alt=''
 							objectfit='cover'
-							className='lg:w-full lg:h-1/5 h-1/2 postImg'
+							className=' postImg'
 						/>
 					</div>
 					<div className=' p-4'>

@@ -70,7 +70,7 @@ const CreateProfile = ({ createProfile, prof:{profile} }) => {
 		<Fragment>
 			<div className=' bg-gray-50 text-gray-800'>
 				<div className=' p-8'>
-					<div className='p-4  bg-white shadow rounded'>
+					<div className='p-4  bg-white shadow rounded '>
 						<form onSubmit={(e) => handleSubmit(e)}>
 							<Alert />
 							<div className='lg:flex lg:justify-center lg:space-x-8'>
