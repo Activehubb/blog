@@ -1,20 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import Agency from '../../../../activehub.png';
 import { DeleteOutlined, Logout } from '@mui/icons-material';
 import { ViewBoardsIcon } from '@heroicons/react/solid';
 import {
 	BookOpenIcon,
 	UserIcon,
 	ChevronDownIcon,
-	TrashIcon,
 } from '@heroicons/react/outline';
 import './nav.css';
+import { AuthContext } from '../../../../context/auth/AuthContext';
+import { logoutUser } from '../../../../context/auth/apicall';
 
 const Nav = () => {
+	const { dispatch } = useContext(AuthContext);
 	const [isOpen, setIsOpen] = useState(false);
 
 	const toggle = () => setIsOpen(!isOpen);
+	const handleLogout = () => {
+		logoutUser(dispatch);
+	};
 	return (
 		<div className='sticky top-0 z-50'>
 			<div className=' bg-white shadow'>
@@ -32,16 +36,11 @@ const Nav = () => {
 								className='box flex items-center space-x-4 border-sm border-solid rounded-full shadow p-2 text-gray-600  relative'
 								onClick={() => toggle()}
 							>
-								<p>Activehub</p>
+								<p>Ademola Artwork</p>
 								<ChevronDownIcon className='h-5 text-gray-400 cursor-pointer' />
 								{isOpen && (
 									<div className='box absolute top-14 right-0 z-10 bg-gray-50  shadow rounded-md '>
 										<div className='bg-gray-900 p-4 rounded-t-md flex justify-center items-center flex-col '>
-											<img
-												src={Agency}
-												alt=''
-												className='h-20 w-20 object-cover rounded-full justify-center items-center'
-											/>
 											<hr />
 											<ul className='list flex py-2'>
 												<li className='list-item'>
@@ -52,37 +51,37 @@ const Nav = () => {
 												</li>
 											</ul>
 										</div>
-										<ul className='list p-4'>
-											<li className='list-item  border-b border-dotted border-gray-200 p-2'>
+										<ul className='list py-4 px-5 '>
+											<li className='list-item  border-b border-dotted border-gray-200 py-2 '>
 												<Link to='/admin'>Create Post</Link>
 											</li>
-											<li className='list-item  border-b border-dotted border-gray-200 p-2'>
+											<li className='list-item  border-b border-dotted border-gray-200 py-2 '>
 												<Link to='/'>Posts</Link>
 											</li>
-											<li className='list-item  border-b border-dotted border-gray-200 p-2'>
+											<li className='list-item  border-b border-dotted border-gray-200 py-2 '>
 												<Link to='/user'>Create Profile</Link>
 											</li>
-											<li className='list-item  border-b border-dotted border-gray-200 p-2'>
+											<li className='list-item  border-b border-dotted border-gray-200 py-2 '>
 												<Link to='/gallery'>Gallery</Link>
 											</li>
-											<li className='list-item  border-b border-dotted border-gray-200 p-2'>
+											<li className='list-item  border-b border-dotted border-gray-200 py-2 '>
 												<Link to='/comments'>Comments</Link>
 											</li>
-											<li className='list-item  border-b border-dotted border-gray-200 p-2'>
-												<Link
-													to='/logout'
-													className='flex items-center justify-center'
-												>
+											<li
+												className='list-item  border-b border-dotted border-gray-200 py-2 '
+												onClick={handleLogout}
+											>
+												<Link to='/logout'>
 													<Logout /> <span>Logout</span>
 												</Link>
 											</li>
-											<li className='list-item bg-red-500 shadow-md rounded-md p-2'>
+											<li className='list-item  shadow-md rounded-md py-2 '>
 												<Link
 													to='/delaccount'
-													className='flex items-center justify-center border-none text-white'
+													className='flex items-center justify-center border-none text-gray-700'
 												>
 													<DeleteOutlined />
-													<p className='text-sm'>Delete Account</p>
+													<p className='text-sm '>Delete Account</p>
 												</Link>
 											</li>
 										</ul>

@@ -1,34 +1,33 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../../user/layouts/Header';
-import { connect } from 'react-redux';
-import { getProfile } from '../../../constants/profile';
-import PropTypes from 'prop-types';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import Animate from './Animate';
+import { ProfileContext } from '../../../context/profile/ProfileContext';
+import { getProfiles } from '../../../context/profile/profileApiCalls';
+import { AuthContext } from '../../../context/auth/AuthContext';
 
-const About = ({
-	getProfile,
-	profile: { profiles, loading },
-	auth: { isAuthenticated },
-}) => {
+const About = () => {
+	const { profile, isFetching, dispatch } = useContext(ProfileContext);
+	const { user } = useContext(AuthContext);
 	useEffect(() => {
-		getProfile();
-	}, [getProfile]);
+		getProfiles(dispatch);
+	}, [dispatch]);
+	console.log(profile);
 	return (
 		<Fragment>
-			{loading ? (
+			{isFetching ? (
 				<Animate type='loading' />
 			) : (
 				<>
 					<Header />
-					{profiles &&
-						profiles.map((profile) => (
+					{profile &&
+						profile.map((profile) => (
 							<div className=' bg-gray-100 p-8' key={profile._id}>
 								<div className='container mx-auto'>
 									<div className=' p-4 shadow-md  bg-white rounded-md'>
@@ -44,10 +43,10 @@ const About = ({
 												/>
 												<div className='box2'>
 													<p className='text-lg text-gray-500 font-bold font-vare'>
-														{profile.user.username}
+														{profile.username}
 													</p>
 													<p className='font-jose text-gray-400'>
-														{profile.user.email}
+														{profile.email}
 													</p>
 												</div>
 											</div>
@@ -101,7 +100,7 @@ const About = ({
 													</ul>
 												</div>
 											)}
-											{isAuthenticated !== null ? (
+											{user !== null ? (
 												<div>
 													<div className='flex justify-between'>
 														<div>
@@ -135,15 +134,15 @@ const About = ({
 	);
 };
 
-About.propTypes = {
-	getProfile: PropTypes.func.isRequired,
-	profile: PropTypes.object.isRequired,
-	auth: PropTypes.object.isRequired,
-};
+// About.propTypes = {
+// 	getProfile: PropTypes.func.isRequired,
+// 	profile: PropTypes.object.isRequired,
+// 	auth: PropTypes.object.isRequired,
+// };
 
-const mapStateToProps = (state) => ({
-	profile: state.profile,
-	auth: state.auth,
-});
+// const mapStateToProps = (state) => ({
+// 	profile: state.profile,
+// 	auth: state.auth,
+// });
 
-export default connect(mapStateToProps, { getProfile })(About);
+export default About;

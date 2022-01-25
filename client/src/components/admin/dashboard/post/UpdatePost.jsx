@@ -1,14 +1,14 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useContext } from 'react';
 import { PlusCircleIcon } from '@heroicons/react/solid';
-import { updatePost } from '../../../../constants/posts';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { useLocation } from 'react-router-dom';
+import { PostContext } from '../../../../context/post/PostContext';
+import { updatePostId } from '../../../../context/post/postApiCalls';
+import { Redirect, useLocation } from 'react-router-dom';
 import storage from '../../../../firebase';
 import { getDownloadURL, ref, uploadBytesResumable } from '@firebase/storage';
 
-const UpdatePost = ({ updatePost }) => {
+const UpdatePost = () => {
 	const [data, setData] = useState(null);
+	const [transfer, setTransfer] = useState(0);
 
 	const [media, setMedia] = useState(null);
 
@@ -17,7 +17,9 @@ const UpdatePost = ({ updatePost }) => {
 
 	const upload = (items) => {
 		items.forEach((item) => {
-			const spaceRef = ref(storage, `/postupdate/${item.file.name}`);
+			const fileName = new Date().getTime + item.label + item.file.name;
+
+			const spaceRef = ref(storage, `/postupdate/${fileName}`);
 
 			const uploadTask = uploadBytesResumable(spaceRef, item.file);
 
@@ -30,26 +32,35 @@ const UpdatePost = ({ updatePost }) => {
 				},
 				(err) => console.log(err),
 				() => {
-					getDownloadURL(uploadTask.snapshot.ref).then((url) =>
+					getDownloadURL(uploadTask.snapshot.ref).then((url) => {
 						setData((data) => {
 							return { ...data, [item.label]: url };
-						})
-					);
+						});
+						setTransfer((data) => data + 1);
+					});
 				}
 			);
 		});
 	};
 
+	const { isUpdated, dispatch } = useContext(PostContext);
 	const location = useLocation();
 	const path = location.pathname.split('/')[2];
+
+	const handleTransfer = (e) => {
+		e.preventDefault();
+
+		upload([{ file: media, label: 'media' }]);
+	};
 
 	const handleUpload = (e) => {
 		e.preventDefault();
 
-		upload([{ file: media, label: 'media' }]);
-
-		updatePost(path, data);
+		updatePostId(path, data, dispatch);
 	};
+	if (isUpdated) {
+		return <Redirect to={`/post/${path}`} />;
+	}
 	console.log(data);
 	return (
 		<Fragment>
@@ -76,6 +87,19 @@ const UpdatePost = ({ updatePost }) => {
 									placeholder='Enter a Title...'
 									className='p-1 my-2 w-full outline-none  bg-transparent text-base pointer-events-auto border-b'
 									onChange={(e) => handleChange(e)}
+								/>
+								<label htmlFor='category'>
+									<h3 className='text-base py-2 font-semibold text-gray-400'>
+										Post Category
+									</h3>
+								</label>
+								<input
+									type='text'
+									name='category'
+									id='category'
+									className='w-full border-none outline-none p-2 text-sm text-gray-700 font-vare focus:outline-none rounded-2xl shadow-md'
+									placeholder='Can be painting, blog, design, arts works category'
+									onChange={handleChange}
 								/>
 								<label htmlFor='desc'>
 									<h3 className='text-base py-2 font-semibold text-gray-400'>
@@ -110,13 +134,24 @@ const UpdatePost = ({ updatePost }) => {
 									/>
 								</div>
 							</div>
-							<div>
-								<input
-									type='submit'
-									value='Update Post'
-									className='inline-block w-full mt-4 py-2  mb-4 shadow-md text-base font-semibold outline-none border-none cursor-pointer bg-purple-900 text-white'
-								/>
-							</div>
+							{transfer === 1 ? (
+								<div>
+									<input
+										type='submit'
+										value='Update Post'
+										className='inline-block w-full mt-4 py-2  mb-4 shadow-md text-base font-semibold outline-none border-none rounded-md cursor-pointer bg-purple-900 text-white'
+									/>
+								</div>
+							) : (
+								<div>
+									<input
+										type='button'
+										value='Upload Post'
+										className='inline-block w-full mt-4 py-2  mb-4 shadow-md text-base font-semibold outline-none border-none rounded-md cursor-pointer bg-purple-900 text-white'
+										onClick={handleTransfer}
+									/>
+								</div>
+							)}
 						</form>
 					</div>
 				</div>
@@ -125,8 +160,4 @@ const UpdatePost = ({ updatePost }) => {
 	);
 };
 
-UpdatePost.propTypes = {
-	updatePost: PropTypes.func.isRequired,
-};
-
-export default connect(null, { updatePost })((UpdatePost));
+export default UpdatePost;

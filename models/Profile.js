@@ -9,6 +9,12 @@ const ProfileSchema = new Schema({
 	media: {
 		type: String,
 	},
+	username: {
+		type: String,
+	},
+	email: {
+		type: String,
+	},
 	desc: {
 		type: String,
 	},

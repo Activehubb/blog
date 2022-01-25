@@ -1,19 +1,14 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useContext } from 'react';
 import Header from '../../user/layouts/Header';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { getPost } from '../../../constants/posts';
 import Animate from './Animate';
 import './animate.css'
+import {PostContext} from '../../../context/post/PostContext'
 
-const Gallery = ({ getPost, post: { loading, posts } }) => {
-	useEffect(() => {
-		getPost();
-		console.log(getPost());
-	}, [getPost]);
+const Gallery = () => {
+	const {posts, isFetching} = useContext(PostContext)
 	return (
 		<Fragment>
-			{loading ? (
+			{isFetching ? (
 				<Animate type='loading' />
 			) : (
 				<div className='bg-gray-100'>
@@ -34,15 +29,4 @@ const Gallery = ({ getPost, post: { loading, posts } }) => {
 	);
 };
 
-Gallery.propTypes = {
-	getPost: PropTypes.func.isRequired,
-	media: PropTypes.object.isRequired,
-};
-
-function mapStateToProps(state) {
-	return {
-		post: state.posts,
-	};
-}
-
-export default connect(mapStateToProps, { getPost })(Gallery);
+export default Gallery;

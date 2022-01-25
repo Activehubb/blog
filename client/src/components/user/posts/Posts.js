@@ -1,13 +1,18 @@
+import { Fragment } from 'react';
 import Post from '../post/Post';
 import './post.css';
 
-const Posts = ({ posts }) => {
+const Posts = ({postData}) => {
 	return (
-		<div className='post lg:grid lg:grid-cols-2'>
-			{posts && (
-				posts.map((post) => <Post post={post}/>)
-			)}
-		</div>
+		<Fragment>
+			<div className='lg:justify-between lg:grid lg:grid-cols-2'>
+				{postData ? (
+					postData.map((post) => <Post post={post} key={post._id} />)
+				) : (
+					<>No Posts Yet</>
+				)}
+			</div>
+		</Fragment>
 	);
 };
 

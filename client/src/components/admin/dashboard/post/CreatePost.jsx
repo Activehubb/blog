@@ -1,17 +1,14 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import { PlusCircleIcon } from '@heroicons/react/solid';
-import { createPost } from '../../../../constants/posts';
-// import { v4 as uuidv4 } from 'uuid';
-// import axios from 'axios';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import storage from '../../../../firebase';
 import { getDownloadURL, ref, uploadBytesResumable } from '@firebase/storage';
-import { setAlert } from '../../../../constants/alert';
-import Alert from '../../layout/Alert';
+import { createPost } from '../../../../context/post/postApiCalls';
+import { PostContext } from '../../../../context/post/PostContext';
+import { Redirect } from 'react-router-dom';
 
-const CreatePost = ({ createPost }) => {
-	const [data, setData] = useState(null);
+const CreatePost = () => {
+	const [data, setData] = useState('');
+	const [transfer, setTransfer] = useState(0);
 
 	const [media, setMedia] = useState(null);
 
@@ -20,7 +17,9 @@ const CreatePost = ({ createPost }) => {
 
 	const upload = (items) => {
 		items.forEach((item) => {
-			const spaceRef = ref(storage, `/images/${item.file.name}`);
+			const fileName = new Date().getTime + item.label + item.file.name;
+
+			const spaceRef = ref(storage, `/images/${fileName}`);
 
 			const uploadTask = uploadBytesResumable(spaceRef, item.file);
 			console.log(item.file, item.file.name);
@@ -33,41 +32,43 @@ const CreatePost = ({ createPost }) => {
 				},
 				(err) => console.log(err),
 				() => {
-					getDownloadURL(uploadTask.snapshot.ref).then((url) =>
+					getDownloadURL(uploadTask.snapshot.ref).then((url) => {
 						setData((data) => {
 							return { ...data, [item.label]: url };
-						})
-					);
+						});
+						setTransfer((data) => data + 1);
+					});
 				}
 			);
 		});
 	};
 
+	const { isCreated, dispatch } = useContext(PostContext);
+
+	const handleTransfer = (e) => {
+		e.preventDefault();
+		upload([{ file: media, label: 'media' }]);
+	};
+
 	const handleUpload = (e) => {
 		e.preventDefault();
-
-		upload([{ file: media, label: 'media' }]);
-
-		if (data && data.media) {
-			createPost(data);
-		} else {
-			setAlert('Opps an error occured', 'red')
-		}
+		createPost(data, dispatch);
 	};
+	if (isCreated) {
+		return <Redirect to='/' />;
+	}
 	console.log(data);
 	return (
 		<Fragment>
-			<div className=' bg-gray-50 text-gray-800 h-full py-8'>
+			<div className=' bg-gray-50 text-gray-800 h-full'>
 				<div className=' flex justify-center items-center h-screen'>
 					<div className='p-4 w-1/2 bg-white shadow rounded'>
-						<Alert />
 						<form onSubmit={(e) => handleUpload(e)}>
 							{media && (
 								<img src={URL.createObjectURL(media)} alt='' className='mt-3' />
 							)}
 
 							<div className='flex justify-center items-center text-gray-600 text-3xl font-extralight py-2 text-center'>
-								{/* <LinkIcon className='h-10' /> */}
 								<>Add a Post</>
 							</div>
 							<div>
@@ -97,6 +98,19 @@ const CreatePost = ({ createPost }) => {
 									autoFocus={true}
 									placeholder='Please write Post details...'
 								></textarea>
+								<label htmlFor='category'>
+									<h3 className='text-base py-2 font-semibold text-gray-400'>
+										Post Category
+									</h3>
+								</label>
+								<input
+									type='text'
+									name='category'
+									id='category'
+									className='w-full border-none outline-none p-4 text-xl text-gray-700 font-vare focus:outline-none rounded-2xl shadow-md'
+									placeholder='Can be painting, blog, design, arts works category'
+									onChange={handleChange}
+								/>
 								<div className='box relative  border-dashed border my-4'>
 									<label
 										htmlFor='media'
@@ -116,13 +130,24 @@ const CreatePost = ({ createPost }) => {
 									/>
 								</div>
 							</div>
-							<div>
-								<input
-									type='submit'
-									value='Create Post'
-									className='inline-block w-full mt-4 py-2  mb-4 shadow-md text-base font-semibold outline-none border-none cursor-pointer'
-								/>
-							</div>
+							{transfer === 1 ? (
+								<div>
+									<input
+										type='submit'
+										value='Create Post'
+										className='inline-block w-full mt-4 py-2  mb-4 shadow-md text-base font-semibold outline-none border-none cursor-pointer'
+									/>
+								</div>
+							) : (
+								<div>
+									<input
+										type='submit'
+										value='Upload Post'
+										className='inline-block w-full mt-4 py-2  mb-4 shadow-md text-base font-semibold outline-none border-none cursor-pointer'
+										onClick={handleTransfer}
+									/>
+								</div>
+							)}
 						</form>
 					</div>
 				</div>
@@ -131,8 +156,4 @@ const CreatePost = ({ createPost }) => {
 	);
 };
 
-CreatePost.propTypes = {
-	createPost: PropTypes.func.isRequired,
-};
-
-export default connect(null, { createPost })(CreatePost);
+export default CreatePost;

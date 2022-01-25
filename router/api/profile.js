@@ -2,15 +2,10 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
 const Profile = require('../../models/Profile');
-const User = require('../../models/User');
-const Post = require('../../models/Post');
 
 router.get('/', async (req, res) => {
 	try {
-		const profiles = await Profile.find().populate('user', [
-			'username',
-			'email',
-		]);
+		const profiles = await Profile.find();
 		res.status(200).json(profiles);
 	} catch (err) {
 		res.status(401).send('Server error');
@@ -30,7 +25,7 @@ router.get('/:id', async (req, res) => {
 	}
 });
 
-router.post('/', auth, async (req, res) => {
+router.post('/create', auth, async (req, res) => {
 	const {
 		media,
 		brand,
@@ -43,10 +38,15 @@ router.post('/', auth, async (req, res) => {
 		linkedIn,
 		skills,
 		instagram,
+		username,
+		email
 	} = req.body;
 
 	const profileFields = {};
 	profileFields.user = req.user.id;
+	if (username) profileFields.username = username;
+	if (email) profileFields.email = email;
+
 	if (media) profileFields.media = media;
 	if (bio) profileFields.bio = bio;
 	if (brand) profileFields.brand = brand;
@@ -75,7 +75,7 @@ router.post('/', auth, async (req, res) => {
 	}
 });
 
-router.put('/:id', auth, async (req, res) => {
+router.put('/update/:id', auth, async (req, res) => {
 	const {
 		media,
 		brand,
@@ -88,10 +88,15 @@ router.put('/:id', auth, async (req, res) => {
 		linkedIn,
 		skills,
 		instagram,
+		username,
+		email
 	} = req.body;
 
 	const profileFields = {};
 	profileFields.user = req.user.id;
+	if (username) profileFields.username = username;
+	if (email) profileFields.email = email;
+
 	if (media) profileFields.media = media;
 	if (bio) profileFields.bio = bio;
 	if (brand) profileFields.brand = brand;
@@ -121,7 +126,7 @@ router.put('/:id', auth, async (req, res) => {
 	}
 });
 
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/delete/:id', auth, async (req, res) => {
 	try {
 		await Profile.findByIdAndDelete(req.params.id);
 		res.status(200).json(`Account deleted successfully`);

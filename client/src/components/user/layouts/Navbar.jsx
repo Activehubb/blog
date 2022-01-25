@@ -1,23 +1,22 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { getProfile } from '../../../constants/profile';
-import PropTypes from 'prop-types';
+import { ProfileContext } from '../../../context/profile/ProfileContext';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 
-const Navbar = ({ getProfile, profile: { profiles } }) => {
-	useEffect(() => {
-		getProfile();
-	}, [getProfile]);
+const Navbar = () => {
+	const { profile } = useContext(ProfileContext);
 	return (
 		<Fragment>
-			{profiles &&
-				profiles.map((profile) => (
-					<div className='container bg-transparent mx-auto lg:hidden'>
+			{profile &&
+				profile.map((prof) => (
+					<div
+						className='container bg-transparent mx-auto lg:hidden'
+						key={prof._id}
+					>
 						<div className=' p-4 bg-transparent  rounded-md'>
 							<ul className=' bg-white list my-4 flex justify-between items-center p-4 shadow-md rounded-md font-medium text-gray-600 font-lora '>
 								<li className='list-item '>
@@ -29,60 +28,77 @@ const Navbar = ({ getProfile, profile: { profiles } }) => {
 							</ul>
 							<div className='shadow-md bg-white my-4 rounded-md'>
 								<small className='font-jose text-gray-400 text-center block p-4'>
-									Developer
+									{prof.desc}
 								</small>
 								<div className='flex justify-around items-center pb-4'>
 									<img
-										src={profile.media}
+										src={prof.brandMedia}
 										alt=''
-										className='rounded-full h-12 shadow-md w-12'
+										className='rounded-full h-14 shadow-md w-14'
 									/>
 									<div className='box2'>
 										<p className='text-lg text-gray-500 font-bold font-vare'>
-											{profile.brand}
+											{prof.username}
 										</p>
-										<p className='font-jose text-gray-400'>
-											{profile.user.email}
-										</p>
+										<p className='font-jose text-gray-400'>{prof.email}</p>
 									</div>
 								</div>
-								<div className='bio font-lora text-gray-500 p-2 text-justify'></div>
+								<div className='bio font-lora text-gray-500 p-2 text-justify'>
+									{prof.bio}
+								</div>
 
 								<hr />
-
 								{profile.social && (
 									<div className='social flex p-4 justify-center'>
 										<ul className='list flex space-x-4'>
 											<li className='list-item p-2 bg-gray-100 shadow space-x-2 rounded-md text-gray-500 font-vare'>
-												<Link to={`${profile.social.facebook}`}>
+												<a
+													href={profile.social.facebook}
+													target='_blank'
+													rel='noreferrer'
+												>
 													<FacebookIcon />
-												</Link>
+												</a>
 											</li>
 											<li className='list-item p-2 bg-gray-100 shadow space-x-2 rounded-md text-gray-500 font-vare'>
-												<Link to={profile.social.youtube}>
+												<a
+													href={profile.social.youtube}
+													target='_blank'
+													rel='noreferrer'
+												>
 													<YouTubeIcon />
-												</Link>
+												</a>
 											</li>
 											<li className='list-item p-2 bg-gray-100 shadow space-x-2 rounded-md text-gray-500 font-vare'>
-												<Link to={profile.social.linkedIn}>
+												<a
+													href={profile.social.linkedIn}
+													target='_blank'
+													rel='noreferrer'
+												>
 													<LinkedInIcon />
-												</Link>
+												</a>
 											</li>
 											<li className='list-item p-2 bg-gray-100 shadow space-x-2 rounded-md text-gray-500 font-vare'>
-												<Link to={profile.social.instagram}>
+												<a
+													href={profile.social.instagram}
+													target='_blank'
+													rel='noreferrer'
+												>
 													<InstagramIcon />
-												</Link>{' '}
+												</a>{' '}
 											</li>
 											<li className='list-item p-2 bg-gray-100 shadow space-x-2 rounded-md text-gray-500 font-vare'>
-												<Link to={profile.social.twitter}>
+												<a
+													href={profile.social.twitter}
+													target='_blank'
+													rel='noreferrer'
+												>
 													<TwitterIcon />
-												</Link>
+												</a>
 											</li>
 										</ul>
 									</div>
 								)}
-
-								
 							</div>
 						</div>
 					</div>
@@ -91,13 +107,13 @@ const Navbar = ({ getProfile, profile: { profiles } }) => {
 	);
 };
 
-Navbar.propTypes = {
-	getProfile: PropTypes.func.isRequired,
-	profile: PropTypes.object.isRequired,
-};
+// Navbar.propTypes = {
+// 	getProfile: PropTypes.func.isRequired,
+// 	profile: PropTypes.object.isRequired,
+// };
 
-const mapStateToProps = (state) => ({
-	profile: state.profile,
-});
+// const mapStateToProps = (state) => ({
+// 	profile: state.profile,
+// });
 
-export default connect(mapStateToProps, { getProfile })(Navbar);
+export default Navbar;

@@ -1,17 +1,18 @@
 import { PlusCircleIcon, LinkIcon } from '@heroicons/react/solid';
 import { UserCircleIcon } from '@heroicons/react/outline';
 import { Fragment, useState } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { updateProfile } from '../../../../constants/profile';
-import Alert from '../../layout/Alert';
+
 import storage from '../../../../firebase';
 import { getDownloadURL, ref, uploadBytesResumable } from '@firebase/storage';
-import { setAlert } from '../../../../constants/alert';
-import { useLocation } from 'react-router-dom';
 
-const UpdateProfile = ({ updateProfile }) => {
+import { Redirect, useLocation } from 'react-router-dom';
+import { updateProfileId } from '../../../../context/profile/profileApiCalls';
+import { useContext } from 'react';
+import { ProfileContext } from '../../../../context/profile/ProfileContext';
+
+const UpdateProfile = () => {
 	const [data, setData] = useState(null);
+	const [transfer, setTransfer] = useState(0);
 
 	const [media, setMedia] = useState(null);
 	const [brandMedia, setBrandMedia] = useState(null);
@@ -21,7 +22,9 @@ const UpdateProfile = ({ updateProfile }) => {
 
 	const upload = (items) => {
 		items.forEach((item) => {
-			const storageRef = ref(storage, `/profileupdate/${item.file.name}`);
+			const fileName = new Date().getTime + item.label + item.file.name;
+
+			const storageRef = ref(storage, `/profileupdate/${fileName}`);
 			const uploadTask = uploadBytesResumable(storageRef, item.file);
 			console.log(item.file.name, item.file);
 			uploadTask.on(
@@ -39,6 +42,7 @@ const UpdateProfile = ({ updateProfile }) => {
 						setData((data) => {
 							return { ...data, [item.label]: url };
 						});
+						setTransfer((data) => data + 1);
 					});
 				}
 			);
@@ -47,22 +51,26 @@ const UpdateProfile = ({ updateProfile }) => {
 
 	const location = useLocation();
 	const path = location.pathname.split('/')[2];
+	const { isUpdated, dispatch } = useContext(ProfileContext);
 
-	const handleSubmit = (e) => {
+	const handleTransfer = (e) => {
 		e.preventDefault();
 
 		upload([
 			{ file: media, label: 'media' },
 			{ file: brandMedia, label: 'brandMedia' },
 		]);
-
-		if (data && data.media) {
-			updateProfile(path, data);
-		} else {
-			setAlert('Opps an error occured', 'red');
-		}
 	};
 
+	const handleSubmit = (e) => {
+		e.preventDefault();
+
+		updateProfileId(path, data, dispatch);
+	};
+
+	if (isUpdated) {
+		return <Redirect to='/about' />;
+	}
 	console.log(data);
 
 	return (
@@ -71,7 +79,6 @@ const UpdateProfile = ({ updateProfile }) => {
 				<div className=' p-8'>
 					<div className='p-4  bg-white shadow rounded'>
 						<form onSubmit={(e) => handleSubmit(e)}>
-							<Alert />
 							<div className='lg:flex lg:justify-center lg:space-x-8'>
 								<div className='lg:w-1/2'>
 									{media && <img src={URL.createObjectURL(media)} alt='' />}
@@ -193,6 +200,30 @@ const UpdateProfile = ({ updateProfile }) => {
 											className='p-1 my-2 w-full outline-none  bg-transparent text-base pointer-events-auto border-b'
 											onChange={(e) => handleChange(e)}
 										/>
+										<label htmlFor='username'>
+											<h3 className='text-base py-2 font-semibold text-gray-400'>
+												Post Creator Name
+											</h3>
+										</label>
+										<input
+											name='username'
+											id='username'
+											placeholder='Enter a name to desc post creator'
+											className='p-1 my-2 w-full outline-none  bg-transparent text-base pointer-events-auto border-b'
+											onChange={(e) => handleChange(e)}
+										/>
+										<label htmlFor='email'>
+											<h3 className='text-base py-2 font-semibold text-gray-400'>
+												Email
+											</h3>
+										</label>
+										<input
+											name='email'
+											id='email'
+											placeholder='Enter a name to desc post creator'
+											className='p-1 my-2 w-full outline-none  bg-transparent text-base pointer-events-auto border-b'
+											onChange={(e) => handleChange(e)}
+										/>
 										<div>
 											<h3 className='text-base text-center py-2 font-semibold text-gray-400'>
 												Social Info
@@ -257,13 +288,24 @@ const UpdateProfile = ({ updateProfile }) => {
 									</div>
 								</div>
 							</div>
-							<div>
-								<input
-									type='submit'
-									value='Update Profile'
-									className='inline-block w-full mt-4 py-2  mb-4 shadow-md text-base font-semibold outline-none border-none cursor-pointer bg-blue-900'
-								/>
-							</div>
+							{transfer === 2 ? (
+								<div>
+									<input
+										type='submit'
+										value='Update Profile'
+										className='inline-block text-white w-full mt-4 py-2  mb-4 shadow-md text-base font-semibold outline-none border-none cursor-pointer bg-blue-900 round-md'
+									/>
+								</div>
+							) : (
+								<div>
+									<input
+										type='button'
+										value='Upload Profile'
+										className='inline-block text-white w-full mt-4 py-2  mb-4 shadow-md text-base font-semibold outline-none border-none cursor-pointer bg-blue-900 round-md'
+										onClick={handleTransfer}
+									/>
+								</div>
+							)}
 						</form>
 					</div>
 				</div>
@@ -272,8 +314,4 @@ const UpdateProfile = ({ updateProfile }) => {
 	);
 };
 
-UpdateProfile.propTypes = {
-	updateProfile: PropTypes.func.isRequired,
-};
-
-export default connect(null, { updateProfile })(UpdateProfile);
+export default UpdateProfile;

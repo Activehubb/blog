@@ -1,17 +1,17 @@
 import { PlusCircleIcon, LinkIcon } from '@heroicons/react/solid';
 import { UserCircleIcon } from '@heroicons/react/outline';
-import { Fragment, useState } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { createProfile } from '../../../../constants/profile';
-import Alert from '../../layout/Alert';
+import { Fragment, useContext, useState } from 'react';
 import storage from '../../../../firebase';
 import { getDownloadURL, ref, uploadBytesResumable } from '@firebase/storage';
-import { setAlert } from '../../../../constants/alert';
+import { createProfile } from '../../../../context/profile/profileApiCalls';
+import { ProfileContext } from '../../../../context/profile/ProfileContext';
 import { Redirect } from 'react-router-dom';
+// import { setAlert } from '../../../../constants/alert';
+// import { Redirect } from 'react-router-dom';
 
-const CreateProfile = ({ createProfile, prof:{profile} }) => {
+const CreateProfile = () => {
 	const [data, setData] = useState(null);
+	const [transfer, setTransfer] = useState(0);
 
 	const [media, setMedia] = useState(null);
 	const [brandMedia, setBrandMedia] = useState(null);
@@ -21,7 +21,9 @@ const CreateProfile = ({ createProfile, prof:{profile} }) => {
 
 	const upload = (items) => {
 		items.forEach((item) => {
-			const storageRef = ref(storage, `/profile/${item.file.name}`);
+			const fileName = new Date().getTime + item.label + item.file.name;
+
+			const storageRef = ref(storage, `/profile/${fileName}`);
 			const uploadTask = uploadBytesResumable(storageRef, item.file);
 			console.log(item.file.name, item.file);
 			uploadTask.on(
@@ -39,31 +41,30 @@ const CreateProfile = ({ createProfile, prof:{profile} }) => {
 						setData((data) => {
 							return { ...data, [item.label]: url };
 						});
+						setTransfer((data) => data + 1);
 					});
 				}
 			);
 		});
 	};
 
-	const handleSubmit = (e) => {
+	const { isCreated, dispatch } = useContext(ProfileContext);
+	console.log(data);
+	const handleTransfer = (e) => {
 		e.preventDefault();
-
 		upload([
 			{ file: media, label: 'media' },
 			{ file: brandMedia, label: 'brandMedia' },
 		]);
-
-		if (data && data.media) {
-			createProfile(data);
-		} else {
-			setAlert('Opps an error occured', 'red')
-		}
 	};
 
-	console.log(data);
-	
-	if (profile) {
-		return <Redirect to='/admin' />
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		createProfile(data, dispatch);
+	};
+
+	if (isCreated) {
+		return <Redirect to='/admin' />;
 	}
 
 	return (
@@ -72,7 +73,7 @@ const CreateProfile = ({ createProfile, prof:{profile} }) => {
 				<div className=' p-8'>
 					<div className='p-4  bg-white shadow rounded '>
 						<form onSubmit={(e) => handleSubmit(e)}>
-							<Alert />
+							{/* <Alert /> */}
 							<div className='lg:flex lg:justify-center lg:space-x-8'>
 								<div className='lg:w-1/2'>
 									{media && <img src={URL.createObjectURL(media)} alt='' />}
@@ -92,7 +93,7 @@ const CreateProfile = ({ createProfile, prof:{profile} }) => {
 											cols='10'
 											className='w-full  p-4 text-xl text-gray-700 font-vare focus:outline-none rounded-2xl shadow-md'
 											autoFocus={true}
-											placeholder='Enter your Email'
+											placeholder='Enter your Biography'
 											onChange={(e) => handleChange(e)}
 										></textarea>
 										<div className='py-2'>
@@ -107,7 +108,7 @@ const CreateProfile = ({ createProfile, prof:{profile} }) => {
 												cols='10'
 												className='w-full  p-4 text-xl text-gray-700 font-vare focus:outline-none rounded-2xl shadow-md'
 												autoFocus={true}
-												placeholder='Enter your Email'
+												placeholder='Enter your Desc'
 												onChange={(e) => handleChange(e)}
 											></textarea>
 											<small className='font-medium  text-gray-500'>
@@ -194,6 +195,18 @@ const CreateProfile = ({ createProfile, prof:{profile} }) => {
 											className='p-1 my-2 w-full outline-none  bg-transparent text-base pointer-events-auto border-b'
 											onChange={(e) => handleChange(e)}
 										/>
+										<label htmlFor='username'>
+											<h3 className='text-base py-2 font-semibold text-gray-400'>
+												Post Creator Name
+											</h3>
+										</label>
+										<input
+											name='username'
+											id='username'
+											placeholder='Enter a name to desc post creator'
+											className='p-1 my-2 w-full outline-none  bg-transparent text-base pointer-events-auto border-b'
+											onChange={(e) => handleChange(e)}
+										/>
 										<div>
 											<h3 className='text-base text-center py-2 font-semibold text-gray-400'>
 												Social Info
@@ -258,13 +271,24 @@ const CreateProfile = ({ createProfile, prof:{profile} }) => {
 									</div>
 								</div>
 							</div>
-							<div>
-								<input
-									type='submit'
-									value='Create Profile'
-									className='inline-block w-full mt-4 py-2  mb-4 shadow-md text-base font-semibold outline-none border-none cursor-pointer'
-								/>
-							</div>
+							{transfer === 2 ? (
+								<div>
+									<input
+										type='submit'
+										value='Create Profile'
+										className='inline-block w-full mt-4 py-2  mb-4 shadow-md text-base font-semibold outline-none border-none cursor-pointer'
+									/>
+								</div>
+							) : (
+								<div>
+									<input
+										type='button'
+										value='Upload Profile'
+										className='inline-block w-full mt-4 py-2  mb-4 shadow-md text-base font-semibold outline-none border-none cursor-pointer'
+										onClick={handleTransfer}
+									/>
+								</div>
+							)}
 						</form>
 					</div>
 				</div>
@@ -273,12 +297,4 @@ const CreateProfile = ({ createProfile, prof:{profile} }) => {
 	);
 };
 
-CreateProfile.propTypes = {
-	createProfile: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-	prof: state.profile
-})
-
-export default connect(mapStateToProps, { createProfile })(CreateProfile);
+export default CreateProfile;

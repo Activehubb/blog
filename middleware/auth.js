@@ -5,19 +5,22 @@ dotenv.config();
 module.exports = (req, res, next) => {
 	// Get Tokens Header
 
-	const token = req.header('x-auth-token');
+	const authHeader = req.headers.token;
 
 	// Validate tokens
-	if (!token) {
-		return res.status(401).json({ msg: 'No token, unauthorized access' });
-	}
-	// Get token
-	try {
-		const decoded = jwt.verify(token, process.env.TOKEN);
-		req.user = decoded.user;
+	if (authHeader) {
+		const token = authHeader.split(' ')[1];
 
-		next();
-	} catch (err) {
-		res.status(401).json('Invalid Token');
+		jwt.verify(token, process.env.TOKEN, (err, user) => {
+			if (err) {
+				return res.status(403).json('Token is not Valid');
+			}
+
+			req.user = user;
+
+			next();
+		});
+	} else {
+		return res.status(401).json('You are not authorized');
 	}
 };

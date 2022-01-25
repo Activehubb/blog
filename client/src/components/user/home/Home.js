@@ -1,26 +1,28 @@
 import Posts from '../posts/Posts';
 import Header from '../layouts/Header';
 import Footer from '../layouts/footer/Footer';
-import React, { Fragment, useEffect } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { getPost } from '../../../constants/posts';
+import React, { Fragment, useContext, useEffect } from 'react';
+import { PostContext } from '../../../context/post/PostContext';
 import Animate from '../../admin/pages/Animate';
+import { getPosts } from '../../../context/post/postApiCalls';
 
-const Home = ({ getPost, post: { posts, loading } }) => {
+const Home = () => {
+	const { isFetching, posts, dispatch } = useContext(PostContext);
 	useEffect(() => {
-		getPost();
-	}, [getPost]);
+		getPosts(dispatch);
+	}, [dispatch]);
+
+	console.log(posts);
 	return (
 		<Fragment>
-			{loading ? (
+			{isFetching ? (
 				<Animate type='loading' />
 			) : (
 				<>
 					<Header />
-					<div>
-						<Posts posts={posts} loading={loading} />
-					</div>
+
+					<Posts postData={posts} key={posts.map((post) => post._id)} />
+
 					<Footer />
 				</>
 			)}
@@ -28,13 +30,13 @@ const Home = ({ getPost, post: { posts, loading } }) => {
 	);
 };
 
-Home.propType = {
-	post: PropTypes.object.isRequired,
-	getPost: PropTypes.func.isRequired,
-};
+// Home.propType = {
+// 	post: PropTypes.object.isRequired,
+// 	getPost: PropTypes.func.isRequired,
+// };
 
-const mapStateToProps = (state) => ({
-	post: state.posts,
-});
+// const mapStateToProps = (state) => ({
+// 	post: state.posts,
+// });
 
-export default connect(mapStateToProps, { getPost })(Home);
+export default Home;

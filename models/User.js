@@ -16,15 +16,6 @@ const UserSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	brand: {
-		type: String
-	},
-	logo: {
-		type: String,
-	},
-	picture: {
-		type: String
-	}
 });
 
-module.exports = User = mongoose.model('user', UserSchema)
+module.exports = User = mongoose.model('user', UserSchema);
