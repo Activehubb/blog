@@ -1,205 +1,76 @@
-import React, { Fragment } from 'react';
-import { Link } from 'react-router-dom';
-import './post.css'
-import '../../admin/pages/animate.css'
+import React, { Fragment, useContext, useEffect } from "react";
+import { Link } from "react-router-dom";
+import "./post.css";
+import "../../admin/pages/animate.css";
+import { getProfiles } from "../../../context/profile/profileApiCalls";
+import { ProfileContext } from "../../../context/profile/ProfileContext";
+import Animate from "../../admin/pages/Animate";
 
 const Card = ({ post }) => {
-	return (
-		<Fragment>
-			<div className='container mx-auto m-4 p-8'>
-				<div className=' flex justify-center items-center flex-col shadow-lg rounded-lg '>
-					<div>
-						<img
-							src={post.media}
-							alt='post media'
-							objectfit='contain'
-							className=' postImg'
-						/>
-					</div>
-					<div className=' p-4'>
-						<h2 className='title p-2'>
-							<button
-								href=''
-								className='font-vare font-medium text-lg text-gray-600 hover:text-gray-800'
-							>
-								{post.title}
-							</button>
-						</h2>
-						<div className='body'>
-							<div className='p-2 text-gray-500'>
-								<span className=''>
-									<Link
-										to={`/post/${post.username}`}
-									>{`by ${post.username}`}</Link>
-								</span>
-								<span>
-									<button className='px-2 font-lora'>
-										| {new Date(post.createdAt).toDateString()} |
-									</button>
-								</span>
-								<span className='creator'>
-									<button>{`${post.category}`}</button>
-								</span>
-							</div>
-							<div className='font-lora text-gray-600 font-medium p-2 postDesc'>
-								{post.desc}
-							</div>
-							<Link
-								to={`/post/${post._id}`}
-								className='p-2 mt-2 inline-block border-solid border text-sm outline-none text-gray-600 font-light ml-2 rounded '
-							>
-								READ MORE
-							</Link>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div className='container mx-auto m-4 p-8'>
-				<div className=' flex justify-center items-center flex-col shadow-lg rounded-lg '>
-					<div>
-						<img
-							src={post.media}
-							alt='post media'
-							objectfit='contain'
-							className=' postImg'
-						/>
-					</div>
-					<div className=' p-4'>
-						<h2 className='title p-2'>
-							<button
-								href=''
-								className='font-vare font-medium text-lg text-gray-600 hover:text-gray-800'
-							>
-								{post.title}
-							</button>
-						</h2>
-						<div className='body'>
-							<div className='p-2 text-gray-500'>
-								<span className=''>
-									<Link
-										to={`/post/${post.user.username}`}
-									>{`by ${post.user.username}`}</Link>
-								</span>
-								<span>
-									<button className='px-2 font-lora'>
-										| {new Date(post.createdAt).toDateString()} |
-									</button>
-								</span>
-								<span className='creator'>
-									<button>{`${post.category}`}</button>
-								</span>
-							</div>
-							<div className='font-lora text-gray-600 font-medium p-2 postDesc'>
-								{post.desc}
-							</div>
-							<Link
-								to={`/post/${post._id}`}
-								className='p-2 mt-2 inline-block border-solid border text-sm outline-none text-gray-600 font-light ml-2 rounded '
-							>
-								READ MORE
-							</Link>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div className='container mx-auto m-4 p-8'>
-				<div className=' flex justify-center items-center flex-col shadow-lg rounded-lg '>
-					<div>
-						<img
-							src={post.media}
-							alt='post media'
-							objectfit='contain'
-							className=' postImg'
-						/>
-					</div>
-					<div className=' p-4'>
-						<h2 className='title p-2'>
-							<button
-								href=''
-								className='font-vare font-medium text-lg text-gray-600 hover:text-gray-800'
-							>
-								{post.title}
-							</button>
-						</h2>
-						<div className='body'>
-							<div className='p-2 text-gray-500'>
-								<span className=''>
-									<Link
-										to={`/post/${post.user.username}`}
-									>{`by ${post.user.username}`}</Link>
-								</span>
-								<span>
-									<button className='px-2 font-lora'>
-										| {new Date(post.createdAt).toDateString()} |
-									</button>
-								</span>
-								<span className='creator'>
-									<button>{`${post.category}`}</button>
-								</span>
-							</div>
-							<div className='font-lora text-gray-600 font-medium p-2 postDesc'>
-								{post.desc}
-							</div>
-							<Link
-								to={`/post/${post._id}`}
-								className='p-2 mt-2 inline-block border-solid border text-sm outline-none text-gray-600 font-light ml-2 rounded '
-							>
-								READ MORE
-							</Link>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div className='container mx-auto m-4 p-8'>
-				<div className=' flex justify-center items-center flex-col shadow-lg rounded-lg '>
-					<div>
-						<img
-							src={post.media}
-							alt='post media'
-							objectfit='cover'
-							className=' postImg'
-						/>
-					</div>
-					<div className=' p-4'>
-						<h2 className='title p-2'>
-							<button
-								href=''
-								className='font-vare font-medium text-lg text-gray-600 hover:text-gray-800'
-							>
-								{post.title}
-							</button>
-						</h2>
-						<div className='body'>
-							<div className='p-2 text-gray-500'>
-								<span className=''>
-									<Link
-										to={`/post/${post.user.username}`}
-									>{`by ${post.user.username}`}</Link>
-								</span>
-								<span>
-									<button className='px-2 font-lora'>
-										| {new Date(post.createdAt).toDateString()} |
-									</button>
-								</span>
-								<span className='creator'>
-									<button>{`${post.category}`}</button>
-								</span>
-							</div>
-							<div className='font-lora text-gray-600 font-medium p-2 postDesc'>
-								{post.desc}
-							</div>
-							<Link
-								to={`/post/${post._id}`}
-								className='p-2 mt-2 inline-block border-solid border text-sm outline-none text-gray-600 font-light ml-2 rounded '
-							>
-								READ MORE
-							</Link>
-						</div>
-					</div>
-				</div>
-			</div>
-		</Fragment>
-	);
+  const { profile, dispatch } = useContext(ProfileContext);
+  useEffect(() => {
+    getProfiles(dispatch);
+  }, [dispatch]);
+
+  if (profile === null) {
+    return <Animate type="loading" />;
+  }
+
+  return (
+    <Fragment>
+      <div class="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
+        <article class="overflow-hidden rounded-lg shadow-lg">
+          <a href={post.media} rel="noreferrel">
+            <img
+              alt="Placeholder"
+              class="block h-auto w-full"
+              src={post.media}
+            />
+          </a>
+
+          <header class="flex items-center justify-between leading-tight p-2 md:p-4">
+            <h1 class="text-lg">
+              <a class="no-underline hover:underline text-black" href="#">
+                {post.title}
+              </a>
+            </h1>
+            <p class="text-grey-darker text-sm">
+              {new Date(post.createdAt).toDateString()}
+            </p>
+          </header>
+
+          <footer class="flex border-t border-gray-200 items-center justify-between leading-none p-2 md:p-4">
+            {profile.map((profile) => (
+              <a
+                class="flex items-center no-underline hover:underline text-black"
+                href={`${profile.media}`}
+                // target="_blank"
+                rel="noreferrel"
+              >
+                <img
+                  alt="Placeholder"
+                  class="block rounded-full w-12 h-12 shadow"
+                  src={profile.media}
+                />
+                <p class="ml-2 text-sm">{profile.username}</p>
+              </a>
+            ))}
+          </footer>
+          <div className="p-4 ">
+            <div className="font-lora text-gray-600 font-medium  postDesc">
+              {post.desc}
+            </div>
+            <Link
+              to={`/post/${post._id}`}
+              className="p-2  mt-2 inline-block border-solid border text-sm outline-none text-gray-600 font-light ml-2 rounded "
+            >
+              READ MORE
+            </Link>
+          </div>
+        </article>
+      </div>
+    </Fragment>
+  );
 };
 
 export default Card;

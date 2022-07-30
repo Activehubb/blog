@@ -5,7 +5,7 @@ import { Fragment, useState } from 'react';
 import storage from '../../../../firebase';
 import { getDownloadURL, ref, uploadBytesResumable } from '@firebase/storage';
 
-import { Redirect, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { updateProfileId } from '../../../../context/profile/profileApiCalls';
 import { useContext } from 'react';
 import { ProfileContext } from '../../../../context/profile/ProfileContext';
@@ -69,7 +69,7 @@ const UpdateProfile = () => {
 	};
 
 	if (isUpdated) {
-		return <Redirect to='/about' />;
+		return <Navigate to='/about' />;
 	}
 	console.log(data);
 

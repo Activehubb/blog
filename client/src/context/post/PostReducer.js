@@ -5,18 +5,14 @@ const PostReducer = (state, action) => {
 		case 'CREATE_POST_START':
 		case 'UPDATE_POST_START':
 			return {
-				posts: [],
-				post: [],
+				...state,
 				isFetching: true,
-				error: false,
-				isUpdated: false,
-				isDeleted: false,
+				
 			};
 		case 'GET_POSTS_SUCCESS':
 			return {
+				...state,
 				posts: action.payload,
-				isFetching: false,
-				error: false,
 			};
 		case 'GET_SINGLEPOST_SUCCESS':
 		case 'CREATE_POST_SUCCESS':
@@ -39,11 +35,7 @@ const PostReducer = (state, action) => {
 			};
 		case 'DELETE_POST_SUCCESS':
 			return {
-				post: [],
-				isFetching: false,
-				error: false,
-				isCreated: false,
-				isUpdated: false,
+				...state,
 				isDeleted: true,
 			};
 		case 'CREATE_POST_FAILURE':

@@ -2,8 +2,8 @@ import PostReducer from './PostReducer';
 import { createContext, useReducer } from 'react';
 
 const INITIAL_STATE = {
-	posts: [],
-	post: [],
+	posts: null,
+	post: null,
 	isFetching: false,
 	error: false,
 	isCreated: false,

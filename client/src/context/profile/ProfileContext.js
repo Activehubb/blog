@@ -2,7 +2,7 @@ import ProfileReducer from './ProfileReducer';
 import { createContext, useReducer } from 'react';
 
 const INITIAL_STATE = {
-	profile: [],
+	profile: null,
 	isFetching: false,
 	error: false,
 	isCreated: false,

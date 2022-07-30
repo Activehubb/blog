@@ -1,6 +1,6 @@
 import { TrashIcon } from '@heroicons/react/outline';
 import React, { Fragment, useContext } from 'react';
-import { Redirect, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { ProfileContext } from '../../../context/profile/ProfileContext';
 import {deleteProfileId} from '../../../context/profile/profileApiCalls'
 import Footer from '../../user/layouts/footer/Footer';
@@ -15,7 +15,7 @@ const DeleteProfile = () => {
 		deleteProfileId(path, dispatch)
 	};
 	if (isDeleted) {
-		return <Redirect to='/about' />
+		return <Navigate to='/about' />
 	}
 	return (
 		<Fragment>
